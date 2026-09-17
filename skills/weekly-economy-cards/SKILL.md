@@ -18,6 +18,14 @@ Create three Korean Instagram Story cards for a weekly period. Each card contain
 5. Populate the supplied HTML/CSS template’s `data.js`, select the next palette in the required cycle, and render with `render.sh`.
 6. Inspect PNGs. Fix wording or simplify the visual if the reading order, data legibility, or balance fails. Archive PNGs, source notes, input data, provenance, and ZIP under the weekly run folder.
 
+## Orchestration and token budget
+
+When the Claude Code Fable profile is available, use its `deep-reasoner` role for editorial planning, source-conflict resolution, and visual tradeoffs. It is configured locally as Claude Opus 4.8 at maximum effort. Route implementation, rendering, and verification changes to the `executor` role, configured as Claude Opus 4.8 at extra-high effort. Route mechanical file reads, commands, and size checks to a lower-cost runner.
+
+Parallelize only independent work: for example, one agent can verify domestic statistics while another checks overseas releases and a third reviews the rendered PNGs. Give each agent a bounded deliverable and source list. Do not ask multiple agents to edit the same `data.js` or design file.
+
+Use expensive reasoning once to choose the three-story angle and resolve evidence conflicts. Keep raw URLs and structured facts in files so builders receive only the selected facts, not repeated article dumps. Stop research when three verified, distinct items are ready; extra candidates do not improve the card.
+
 ## Non-negotiable card constraints
 
 - Three cards per weekly edition; one news item per card.
