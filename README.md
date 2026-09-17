@@ -1,35 +1,31 @@
 # AI Agent Playbook
 
-**반복 업무를 AI 에이전트가 재현 가능하게 끝내도록, 역할·검증·산출물·비용을 코드와 문서로 고정해 둔 개인 운영 저장소다.**
+**AI 에이전트를 역할별로 분배하고, 토큰 낭비 없이 반복 가능한 실행 시스템으로 만드는 개인 운영 저장소다.**
 
-좋은 결과를 한 번 받는 것보다, 다음 세션에서도 같은 판단 기준으로 다시 만드는 쪽에 집중했다. 각 폴더는 바로 실행할 수 있는 Skill, 실제 산출물, 실패에서 고친 기준, 자동화 훅을 함께 둔다.
+한 모델에게 계획·구현·검증을 전부 맡기면 추론은 반복되고 결과 책임도 흐려진다. 이 저장소는 역할, 파일 책임, 병렬 경계, 중단 조건을 Skill로 고정한다.
 
-## Workflows
+## Workflow
 
-| 폴더 | 무엇을 하는가 | 핵심 도구 |
+[Claude 에이전트 운영](workflows/claude-agent-operations/)은 Fable 고급 기획, Opus 빌더, Sonnet 실행 보조를 분리해 운영하는 실제 기준을 담는다.
+
+| 역할 | 모델 | 맡길 일 |
 | --- | --- | --- |
-| [경제 뉴스 카드 제작](workflows/economy-news-cards/) | 공식 원문 3개를 검증해 인스타 스토리 카드·출처·ZIP으로 패키징 | GPT Image, 웹 리서치, Codex 자동화 |
-| [Claude 에이전트 운영](workflows/claude-agent-operations/) | Fable 기획과 Opus 빌더를 분리해 품질을 유지하며 토큰을 통제 | Claude Opus 5.1, Opus 5.0, Sonnet 5 |
+| 기획·복잡한 판단 | Claude Opus 5.1 | 설계, 우선순위, 상충하는 근거 판단 |
+| 빌더 | Claude Opus 5.0 | 구현, 수정, 테스트, 검수 |
+| 실행 보조 | Claude Sonnet 5 | 탐색, 명령 실행, 파일·로그 확인 |
 
-## 설치 가능한 Skills
+## 설치 가능한 Skill
 
 ```bash
 git clone https://github.com/mingeonho1/ai-agent-playbook.git
-cp -R ai-agent-playbook/skills/weekly-economy-cards ~/.codex/skills/
 cp -R ai-agent-playbook/skills/claude-agent-operations ~/.codex/skills/
 ```
 
-| Skill | 사용할 때 |
-| --- | --- |
-| [weekly-economy-cards](skills/weekly-economy-cards/SKILL.md) | 경제·주식·금융 뉴스를 검증해 주간 인스타 스토리 3장으로 만들 때 |
-| [claude-agent-operations](skills/claude-agent-operations/SKILL.md) | 여러 Claude 에이전트를 역할·토큰 예산·파일 책임으로 운영할 때 |
+[claude-agent-operations](skills/claude-agent-operations/SKILL.md)은 다음을 강제한다.
 
-각 Skill은 `SKILL.md`와 `agents/openai.yaml`을 포함한다. 세션 기억이나 대화 맥락이 없어도 필요한 작업 규칙을 로드하도록 만들었다.
-
-## 운영 원칙
-
-- 모델에게 판단을 위임하되, 숫자·기간·출처는 원문과 다시 대조한다.
-- 비싼 추론은 방향을 정하는 한 번의 판단에 쓰고, 반복 작업은 짧은 계약과 파일로 넘긴다.
-- 병렬화는 독립 검증에서만 사용하고, 같은 파일의 최종 편집자는 한 명으로 둔다.
-- 결과는 이미지 하나가 아니라 입력 데이터, 출처, 생성 기록, ZIP까지 남긴다.
+- 독립적인 조사·검증만 병렬로 돌린다.
+- 동일 파일의 최종 편집자는 한 명이다.
+- 고급 모델은 결정이 어려운 한 번의 판단에만 쓴다.
+- 빌더는 확정된 사실·파일 범위·검증 기준만 받아 실행한다.
+- 결과는 짧은 결론, 근거, 불확실성만 반환한다.
 
