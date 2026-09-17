@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "evaluation_id": "task-baseline-v1",
+  "task_id": "task-id",
+  "task_fingerprint": "sha256:task-contract",
+  "attempt": 1,
+  "candidate_fingerprint": "sha256:candidate",
+  "evidence_fingerprint": "sha256:evidence",
+  "rubric_version": "1.0.0",
+  "routing": {
+    "required_reviewer_model": "REQUIRED_STRONGEST_REVIEWER",
+    "required_reviewer_effort": "xhigh",
+    "actual_reviewer_model": "UNEXECUTED",
+    "actual_reviewer_effort": "UNEXECUTED",
+    "isolation_confirmed": false
+  },
+  "loop": {"model": "configured-ai-loop", "effort": "medium"},
+  "progress_kind": "baseline",
+  "dimensions": {
+    "intent": {"score": null, "evidence": []},
+    "correctness": {"score": null, "evidence": []},
+    "verification": {"score": null, "evidence": []},
+    "clarity": {"score": null, "evidence": []},
+    "efficiency": {"score": null, "evidence": []}
+  },
+  "mandatory_criteria": [{"id": "required-check", "passed": null, "evidence": []}],
+  "findings": [],
+  "fix_targets": ["Resolve one evidenced issue or collect one missing proof"],
+  "runtime": {"duration_seconds": null, "cost_usd": null, "input_tokens": null, "output_tokens": null}
+}

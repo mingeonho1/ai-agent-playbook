@@ -1,0 +1,31 @@
+{
+  "synthetic_example": true,
+  "schema_version": "1.0",
+  "evaluation_id": "synthetic-demo-v1",
+  "task_id": "synthetic-demo",
+  "task_fingerprint": "sha256:synthetic-task",
+  "attempt": 1,
+  "candidate_fingerprint": "sha256:synthetic-candidate",
+  "evidence_fingerprint": "sha256:synthetic-evidence",
+  "rubric_version": "1.0.0",
+  "routing": {
+    "required_reviewer_model": "gpt-6-astra",
+    "required_reviewer_effort": "xhigh",
+    "actual_reviewer_model": "gpt-6-astra",
+    "actual_reviewer_effort": "xhigh",
+    "isolation_confirmed": true
+  },
+  "loop": {"model": "gpt-5.6-sol", "effort": "medium"},
+  "progress_kind": "baseline",
+  "dimensions": {
+    "intent": {"score": 4, "evidence": ["Synthetic requirement mapping"]},
+    "correctness": {"score": 3, "evidence": ["Synthetic behavior check"]},
+    "verification": {"score": null, "evidence": []},
+    "clarity": {"score": 3, "evidence": ["Synthetic review note"]},
+    "efficiency": {"score": 3, "evidence": ["Synthetic scope check"]}
+  },
+  "mandatory_criteria": [{"id": "synthetic-required-check", "passed": null, "evidence": []}],
+  "findings": [],
+  "fix_targets": ["Collect the missing synthetic verification evidence"],
+  "runtime": {"duration_seconds": null, "cost_usd": null, "input_tokens": null, "output_tokens": null}
+}
