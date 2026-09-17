@@ -21,7 +21,7 @@ mkdir -p "$OUTPUT_DIR"
 for SLIDE in 1 2 3; do
   PAGE_URL="file://$ROOT_DIR/index.html?slide=$SLIDE"
   OUTPUT_FILE="$OUTPUT_DIR/weekly-economy-0$SLIDE.png"
-  DOM_OUTPUT="$("$CHROME_BIN" \
+  if ! DOM_OUTPUT="$("$CHROME_BIN" \
     --headless=new \
     --incognito \
     --user-data-dir="$CHROME_PROFILE_ROOT/dom-$SLIDE" \
@@ -29,7 +29,11 @@ for SLIDE in 1 2 3; do
     --allow-file-access-from-files \
     --virtual-time-budget=1000 \
     --dump-dom \
-    "$PAGE_URL" 2>/dev/null)"
+    "$PAGE_URL" 2>&1)"; then
+    echo "Chrome failed while preparing slide $SLIDE:" >&2
+    echo "$DOM_OUTPUT" >&2
+    exit 1
+  fi
 
   if [[ "$DOM_OUTPUT" != *'data-render-ready="true"'* ]]; then
     echo "Slide $SLIDE did not reach a render-ready state." >&2
