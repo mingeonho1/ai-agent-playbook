@@ -1,75 +1,35 @@
-# 경제 뉴스 카드 제작 시스템
+# AI Agent Playbook
 
-매주 경제·주식·금융 뉴스를 인스타그램 스토리 3장으로 정리하는 재현 가능한 작업 흐름이다. AI가 기사 요약을 뱉고 끝나는 방식이 아니다. 원문 검증, 카드에 담을 주장 선택, 조건부 생활 영향 문장, 데이터 기반 렌더링, 이미지 검수, 주간 보관을 한 묶음으로 둔다.
+**반복 업무를 AI 에이전트가 재현 가능하게 끝내도록, 역할·검증·산출물·비용을 코드와 문서로 고정해 둔 개인 운영 저장소다.**
 
-![2026년 9월 9~13일 카드 1](examples/2026-09-09_to_13/weekly-economy-01.png)
+좋은 결과를 한 번 받는 것보다, 다음 세션에서도 같은 판단 기준으로 다시 만드는 쪽에 집중했다. 각 폴더는 바로 실행할 수 있는 Skill, 실제 산출물, 실패에서 고친 기준, 자동화 훅을 함께 둔다.
 
-## 왜 이 구조인가
+## Workflows
 
-첫 시안은 한 화면에 정보가 너무 많고 핵심 수치가 묻혔다. 이미지 생성 결과만으로는 한글 작은 글자와 그래프 수치가 불안정했고, 무엇을 봐야 하는지 바로 읽히지 않았다. 그래서 레퍼런스에서 세 가지만 가져왔다.
+| 폴더 | 무엇을 하는가 | 핵심 도구 |
+| --- | --- | --- |
+| [경제 뉴스 카드 제작](workflows/economy-news-cards/) | 공식 원문 3개를 검증해 인스타 스토리 카드·출처·ZIP으로 패키징 | GPT Image, 웹 리서치, Codex 자동화 |
+| [Claude 에이전트 운영](workflows/claude-agent-operations/) | Fable 기획과 Opus 빌더를 분리해 품질을 유지하며 토큰을 통제 | Claude Opus 5.1, Opus 5.0, Sonnet 5 |
 
-- 한 화면에는 뉴스 하나, 수치 하나, 결론 하나만 둔다.
-- 큰 제목과 색으로 시선을 먼저 잡고, 수치는 직접 읽히는 그래프로 보여 준다.
-- `그래서 우리한텐?`은 1~2줄의 조건부 해석으로 끝낸다.
-
-원본 레퍼런스 이미지는 타사 로고와 저작물 요소를 포함해 저장소에 넣지 않았다. 대신 적용한 판단과 제한은 [디자인 결정 기록](docs/design-decisions.md)에 남겼다.
-
-## 결과물과 다운로드
-
-실행 한 번의 결과는 아래 형태로 저장한다.
-
-```text
-runs/2026-09-13/
-├── weekly-economy-01.png
-├── weekly-economy-02.png
-├── weekly-economy-03.png
-├── sources.md
-├── data.js
-└── economy-stories.zip
-```
-
-현재 예시는 [PNG 3장](examples/2026-09-09_to_13/)과 [출처 기록](examples/2026-09-09_to_13/sources.md)에서 바로 내려받을 수 있다. ZIP은 공유하기 직전에 같은 주차 폴더에서 만든다.
-
-## 실행
-
-macOS와 Google Chrome이 설치된 환경에서 실행한다.
+## 설치 가능한 Skills
 
 ```bash
-cd template
-chmod +x render.sh
-./render.sh
+git clone https://github.com/mingeonho1/ai-agent-playbook.git
+cp -R ai-agent-playbook/skills/weekly-economy-cards ~/.codex/skills/
+cp -R ai-agent-playbook/skills/claude-agent-operations ~/.codex/skills/
 ```
 
-`data.js`만 주간 사실에 맞게 바꾸면 `output/`에 1080×1920 PNG 3장이 생성된다. 스크립트는 렌더 준비 상태, 텍스트 넘침, 이미지 크기를 검사한다.
+| Skill | 사용할 때 |
+| --- | --- |
+| [weekly-economy-cards](skills/weekly-economy-cards/SKILL.md) | 경제·주식·금융 뉴스를 검증해 주간 인스타 스토리 3장으로 만들 때 |
+| [claude-agent-operations](skills/claude-agent-operations/SKILL.md) | 여러 Claude 에이전트를 역할·토큰 예산·파일 책임으로 운영할 때 |
 
-## AI가 맡는 일과 사람이 고정한 기준
+각 Skill은 `SKILL.md`와 `agents/openai.yaml`을 포함한다. 세션 기억이나 대화 맥락이 없어도 필요한 작업 규칙을 로드하도록 만들었다.
 
-| 단계 | 역할 | 고정 기준 |
-| --- | --- | --- |
-| 리서치 | 후보 뉴스 탐색·원문 요약 | 지표는 공식 원문으로 다시 확인 |
-| 편집 | 제목·카드 문장 초안 | 사실/해석/추측을 섞지 않음 |
-| 구조화 | `data.js` 생성 | 카드 문구와 원문 수치가 1:1 대응 |
-| 제작 | HTML/CSS → Chrome PNG | 한 장 한 뉴스, 1080×1920 |
-| 검수 | 이미지와 출처 대조 | 수치·기간·단위·비교기준·적용일 확인 |
-| 배포 | PNG·출처·ZIP 보관 및 알림 | 주차별 폴더와 색상 순서 유지 |
+## 운영 원칙
 
-## 에이전트 운영 방식
+- 모델에게 판단을 위임하되, 숫자·기간·출처는 원문과 다시 대조한다.
+- 비싼 추론은 방향을 정하는 한 번의 판단에 쓰고, 반복 작업은 짧은 계약과 파일로 넘긴다.
+- 병렬화는 독립 검증에서만 사용하고, 같은 파일의 최종 편집자는 한 명으로 둔다.
+- 결과는 이미지 하나가 아니라 입력 데이터, 출처, 생성 기록, ZIP까지 남긴다.
 
-카드의 품질을 올리는 작업은 계획과 제작을 한 모델에게 길게 맡기지 않는다. 이 환경에서는 Claude Code의 Fable 오케스트레이션 프로필을 켜고, 기획·검증 판단은 Claude Opus 5.1의 고급 추론 역할에게, 구현·렌더링·검수는 Claude Opus 5.0 빌더에게 분리한다. 파일 확인과 단순 명령은 Claude Sonnet 5에 맡기고, 서로 파일을 건드리지 않는 리서치·출처 대조·렌더링 검수는 병렬로 처리한다. 상세 역할과 토큰 사용 기준은 [Fable 오케스트레이션](docs/fable-orchestration.md)에 있다.
-
-세션 기억이 없어도 같은 품질을 재현하려면 [Skill](skills/weekly-economy-cards/SKILL.md)을 사용한다. 매주 실행 조건은 [자동화 훅](automation/weekly-hook.md), 상세 검증은 [출처 검증 계약](skills/weekly-economy-cards/references/source-verification.md)에 있다.
-
-## 모델과 도구의 기록 원칙
-
-현재 카드의 최종 PNG는 이미지 생성 모델 산출물이 아니다. HTML/CSS와 브라우저 렌더링으로 만든 결정적 결과물이다. 원문 분석에는 실행 환경에서 선택된 Codex 모델과 웹 검색을 쓰고, 실제 모델 식별자가 노출될 때만 주차별 `provenance.md`에 남긴다. 알 수 없는 모델명을 지어 쓰지 않는다.
-
-초기 이미지 시안은 내장 이미지 생성 도구를 썼지만, 실행 로그에 모델 ID가 남지 않아 특정 모델을 주장하지 않는다. 앞으로 사진·삽화가 꼭 필요한 카드만 GPT Image를 보조로 고려한다. 텍스트와 그래프가 주인 경제 카드는 [모델·도구 선택](docs/model-and-tooling.md)의 이유로 코드 렌더링을 기본값으로 둔다.
-
-## 문서
-
-- [디자인 결정 기록](docs/design-decisions.md): 실패 시안에서 고친 점과 레퍼런스 해석
-- [모델·도구 선택](docs/model-and-tooling.md): 실제 사용 경계와 공식 문서 근거
-- [Fable 오케스트레이션](docs/fable-orchestration.md): 고급 기획과 Opus 빌더의 병렬 운영
-- [작업 흐름](docs/workflow.md): 뉴스에서 ZIP까지의 단계와 실패 처리
-- [Skill](skills/weekly-economy-cards/SKILL.md): 다른 세션에서도 쓰는 실행 지침
-- [자동화 훅](automation/weekly-hook.md): 주차 계산·색상 순환·알림 계약

@@ -15,8 +15,8 @@ Create three Korean Instagram Story cards for a weekly period. Each card contain
 2. Collect five to eight candidates from primary institutions. Keep three that have a clear number and distinct practical relevance.
 3. Check every number against its primary URL before writing. Read [source-verification.md](references/source-verification.md) before creating `data.js`.
 4. Keep facts in the headline and conditional interpretation in `그래서 우리한텐?`. Avoid investment advice and causal claims the source does not establish.
-5. Populate the supplied HTML/CSS template’s `data.js`, select the next palette in the required cycle, and render with `render.sh`.
-6. Inspect PNGs. Fix wording or simplify the visual if the reading order, data legibility, or balance fails. Archive PNGs, source notes, input data, provenance, and ZIP under the weekly run folder.
+5. Use the built-in GPT Image workflow for the card visual, with the approved reference-derived hierarchy and next palette in the required cycle. For a number or date that must remain exact, use the supplied HTML/CSS template as a supporting layer rather than asking the image model to improvise it.
+6. Inspect PNGs. Fix wording or regenerate if the reading order, data legibility, or balance fails. Archive PNGs, source notes, input data, provenance, and ZIP under the weekly run folder.
 
 ## Orchestration and token budget
 
@@ -32,7 +32,7 @@ Use expensive reasoning once to choose the three-story angle and resolve evidenc
 - 1080×1920 PNG; title at most two lines; practical impact one or two short lines.
 - Keep the base paper system fixed. Cycle the single accent palette: `green-coral → teal-orange → olive-terracotta`.
 - Place the release source and date in the footer; put full URLs and verification notes in `sources.md`.
-- Use deterministic HTML/CSS browser rendering for text and charts. Use an image model only for a non-data illustration layer when it improves the specific card.
+- Use the built-in GPT Image workflow for final card visuals. Keep the HTML/CSS renderer available as a supporting path for exact text or chart layers.
 
 ## Read when needed
 
