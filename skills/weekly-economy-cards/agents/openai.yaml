@@ -1,0 +1,4 @@
+interface:
+  display_name: "Weekly Economy Cards"
+  short_description: "Create source-verified Instagram economy story cards"
+  default_prompt: "Create this week's three verified Korean economy story cards and package the PNGs, sources, and ZIP."

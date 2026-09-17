@@ -1,0 +1,33 @@
+---
+name: weekly-economy-cards
+description: Create verified weekly Korean economy, stock, and finance news cards for Instagram Stories. Use when producing three concise, source-backed 1080×1920 cards with a reproducible data-to-PNG workflow.
+metadata:
+  short-description: Verified weekly economy story cards
+---
+
+# Weekly Economy Cards
+
+Create three Korean Instagram Story cards for a weekly period. Each card contains one news item, one primary number or comparison, and a short `그래서 우리한텐?` interpretation. The outcome is a downloadable package, not just a draft caption.
+
+## Working method
+
+1. Determine the coverage period. Start on the day after the previous card’s final date; do not overlap weeks.
+2. Collect five to eight candidates from primary institutions. Keep three that have a clear number and distinct practical relevance.
+3. Check every number against its primary URL before writing. Read [source-verification.md](references/source-verification.md) before creating `data.js`.
+4. Keep facts in the headline and conditional interpretation in `그래서 우리한텐?`. Avoid investment advice and causal claims the source does not establish.
+5. Populate the supplied HTML/CSS template’s `data.js`, select the next palette in the required cycle, and render with `render.sh`.
+6. Inspect PNGs. Fix wording or simplify the visual if the reading order, data legibility, or balance fails. Archive PNGs, source notes, input data, provenance, and ZIP under the weekly run folder.
+
+## Non-negotiable card constraints
+
+- Three cards per weekly edition; one news item per card.
+- 1080×1920 PNG; title at most two lines; practical impact one or two short lines.
+- Keep the base paper system fixed. Cycle the single accent palette: `green-coral → teal-orange → olive-terracotta`.
+- Place the release source and date in the footer; put full URLs and verification notes in `sources.md`.
+- Use deterministic HTML/CSS browser rendering for text and charts. Use an image model only for a non-data illustration layer when it improves the specific card.
+
+## Read when needed
+
+- For primary-source facts and wording checks: [source-verification.md](references/source-verification.md)
+- For visual hierarchy, typography, and palette choices: [design-system.md](references/design-system.md)
+- For folder names, output artifacts, and notification content: [run-package.md](references/run-package.md)

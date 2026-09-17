@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, initial-scale=1" />
+    <title>이번 주 경제 한 장</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="story" id="story">
+      <section class="paper" aria-labelledby="headline">
+        <header class="header">
+          <p class="series">이번 주 경제 한 장</p>
+          <p class="week" id="week"></p>
+        </header>
+
+        <div class="title-block">
+          <p class="kicker" id="kicker"></p>
+          <h1 id="headline" class="guard"></h1>
+        </div>
+
+        <div class="visual" id="visual" aria-label="핵심 수치 설명 그래픽"></div>
+        <div class="bottom-note" id="bottom-note"></div>
+
+        <footer class="footer">
+          <span id="footer-week"></span>
+          <span id="source" class="guard"></span>
+        </footer>
+      </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script>
+      const query = new URLSearchParams(location.search);
+      const requested = Number(query.get("slide") || 1);
+      const slideNumber = Number.isInteger(requested) && requested >= 1 && requested <= 3 ? requested : 1;
+      const data = window.WEEKLY_ECONOMY.slides[slideNumber - 1];
+      const allowedThemes = ["green-coral", "teal-orange", "olive-terracotta"];
+      const theme = allowedThemes.includes(window.WEEKLY_ECONOMY.theme)
+        ? window.WEEKLY_ECONOMY.theme
+        : allowedThemes[0];
+
+      document.body.dataset.slide = String(slideNumber);
+      document.body.dataset.theme = theme;
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      document.title = `${data.kicker} | 이번 주 경제 한 장`;
+      document.getElementById("week").textContent = window.WEEKLY_ECONOMY.weekLabel;
+      document.getElementById("footer-week").textContent = window.WEEKLY_ECONOMY.period;
+      document.getElementById("kicker").textContent = data.kicker;
+      document.getElementById("headline").innerHTML = data.headline;
+      document.getElementById("source").textContent = data.source;
+
+      const visual = document.getElementById("visual");
+      const note = document.getElementById("bottom-note");
+
+      const visuals = {
+        inflation: () => {
+          const axisSteps = 4;
+          const axisLabels = Array.from({ length: axisSteps + 1 }, (_, index) => {
+            const value = data.visual.axisMax - (data.visual.axisMax / axisSteps) * index;
+            return `<span style="bottom: ${(value / data.visual.axisMax) * 100}%">${Number.isInteger(value) ? value : value.toFixed(1)}%</span>`;
+          }).join("");
+          const gridLines = Array.from({ length: axisSteps + 1 }, (_, index) => {
+            const value = data.visual.axisMax - (data.visual.axisMax / axisSteps) * index;
+            return `<i style="bottom: ${(value / data.visual.axisMax) * 100}%"></i>`;
+          }).join("");
+          visual.innerHTML = `
+            <div class="chart-meta">${data.visual.context}</div>
+            <div class="bar-chart">
+              <div class="y-axis" aria-hidden="true">${axisLabels}</div>
+              <div class="grid-lines" aria-hidden="true">${gridLines}</div>
+              <div class="bars">
+                <div class="bar-column">
+                  <strong class="bar-value">${data.visual.first.value}%</strong>
+                  <div class="bar old" style="height: ${(data.visual.first.value / data.visual.axisMax) * 100}%"></div>
+                  <span class="bar-label">${data.visual.first.label}</span>
+                </div>
+                <div class="bar-column">
+                  <strong class="bar-value coral">${data.visual.second.value}%</strong>
+                  <div class="bar new" style="height: ${(data.visual.second.value / data.visual.axisMax) * 100}%"></div>
+                  <span class="bar-label">${data.visual.second.label}</span>
+                </div>
+              </div>
+              <div class="delta-badge"><small>한 달 새</small><strong>${data.visual.delta}</strong></div>
+            </div>`;
+        },
+        currentAccount: () => {
+          visual.innerHTML = `
+            <div class="flow-stage">
+              <div class="place overseas"><span class="place-icon">✦</span><strong>해외</strong></div>
+              <div class="flow-arrows" aria-label="해외와 한국 사이의 돈의 흐름">
+                <div class="flow-row flow-in"><span>${data.visual.received}</span><i></i></div>
+                <div class="flow-row flow-out"><i></i><span>${data.visual.paid}</span></div>
+              </div>
+              <div class="place korea"><span class="place-icon">₩</span><strong>한국</strong></div>
+            </div>
+            <div class="metric-card">
+              <p>${data.visual.period}</p>
+              <strong>${data.visual.amount}</strong>
+              <span>${data.visual.result}</span>
+              <small>${data.visual.context}</small>
+            </div>`;
+        },
+        gdp: () => {
+          visual.innerHTML = `
+            <div class="gdp-metric">
+              <strong>${data.visual.change}</strong>
+              <p>${data.visual.context}</p>
+            </div>
+            <div class="index-compare" aria-label="1분기를 100으로 놓은 실질 GDP 비교">
+              <div class="index-block first"><span>${data.visual.first.label}</span><strong>${data.visual.first.value}</strong></div>
+              <div class="index-arrow"><span>→</span><small>${data.visual.direction}</small></div>
+              <div class="index-block second"><span>${data.visual.second.label}</span><strong>${data.visual.second.value}</strong></div>
+            </div>
+            <p class="index-caption">${data.visual.caption}</p>`;
+        },
+      };
+
+      visuals[data.type]();
+      note.innerHTML = `<h2>${data.note.heading}</h2><p class="guard">${data.note.body}</p>${data.note.extra ? `<div class="plain-equation">${data.note.extra}</div>` : ""}`;
+
+      const markRenderState = () => {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo(0, 0);
+        const overflows = [...document.querySelectorAll(".guard")].filter(
+          (element) => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1,
+        );
+        document.documentElement.dataset.overflow = String(overflows.length > 0);
+        document.documentElement.dataset.overflowTargets = overflows
+          .map((element) => `${element.id || element.className}:${element.scrollWidth}x${element.scrollHeight}/${element.clientWidth}x${element.clientHeight}`)
+          .join(",");
+        document.documentElement.dataset.renderReady = "true";
+      };
+
+      markRenderState();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(markRenderState);
+      window.addEventListener("load", markRenderState);
+    </script>
+  </body>
+</html>
