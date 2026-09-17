@@ -20,7 +20,7 @@ Create three Korean Instagram Story cards for a weekly period. Each card contain
 
 ## Orchestration and token budget
 
-When the Claude Code Fable profile is available, use its `deep-reasoner` role for editorial planning, source-conflict resolution, and visual tradeoffs. It is configured locally as Claude Opus 4.8 at maximum effort. Route implementation, rendering, and verification changes to the `executor` role, configured as Claude Opus 4.8 at extra-high effort. Route mechanical file reads, commands, and size checks to a lower-cost runner.
+When the Claude Code Fable profile is available, use its `deep-reasoner` role for editorial planning, source-conflict resolution, and visual tradeoffs. Use Claude Opus 5.1 with maximum effort for this role. Route implementation, rendering, and verification changes to the `executor` role using Claude Opus 5.0 at extra-high effort. Route mechanical file reads, commands, and size checks to Claude Sonnet 5 at medium effort.
 
 Parallelize only independent work: for example, one agent can verify domestic statistics while another checks overseas releases and a third reviews the rendered PNGs. Give each agent a bounded deliverable and source list. Do not ask multiple agents to edit the same `data.js` or design file.
 

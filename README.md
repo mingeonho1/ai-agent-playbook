@@ -55,7 +55,7 @@ chmod +x render.sh
 
 ## 에이전트 운영 방식
 
-카드의 품질을 올리는 작업은 계획과 제작을 한 모델에게 길게 맡기지 않는다. 이 환경에서는 Claude Code의 Fable 오케스트레이션 프로필을 켜고, 기획·검증 판단은 고급 추론 역할에게, 구현·렌더링·검수는 Opus 빌더에게 분리한다. 서로 파일을 건드리지 않는 리서치, 출처 대조, 렌더링 검수는 병렬로 처리한다. 상세 역할과 토큰 사용 기준은 [Fable 오케스트레이션](docs/fable-orchestration.md)에 있다.
+카드의 품질을 올리는 작업은 계획과 제작을 한 모델에게 길게 맡기지 않는다. 이 환경에서는 Claude Code의 Fable 오케스트레이션 프로필을 켜고, 기획·검증 판단은 Claude Opus 5.1의 고급 추론 역할에게, 구현·렌더링·검수는 Claude Opus 5.0 빌더에게 분리한다. 파일 확인과 단순 명령은 Claude Sonnet 5에 맡기고, 서로 파일을 건드리지 않는 리서치·출처 대조·렌더링 검수는 병렬로 처리한다. 상세 역할과 토큰 사용 기준은 [Fable 오케스트레이션](docs/fable-orchestration.md)에 있다.
 
 세션 기억이 없어도 같은 품질을 재현하려면 [Skill](skills/weekly-economy-cards/SKILL.md)을 사용한다. 매주 실행 조건은 [자동화 훅](automation/weekly-hook.md), 상세 검증은 [출처 검증 계약](skills/weekly-economy-cards/references/source-verification.md)에 있다.
 
